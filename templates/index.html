@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NBA Predictions</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .grid-item {
+            text-align: center;
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        .dataframe {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .dataframe th, .dataframe td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>Points Prediction</h1>
+    <form action="/predict" method="post">
+        {% for feature in features %}
+        <label for="{{ feature }}">{{ feature }}:</label>
+        <input type="text" id="{{ feature }}" name="{{ feature }}" required><br><br>
+        {% endfor %}
+        
+        <select name="model">
+            {% for model in models %}
+            <option value="{{ model }}">{{ model }}</option>
+            {% endfor %}
+        </select><br><br>
+        
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction_text %}
+    <h2>{{ prediction_text }}</h2>
+    {% endif %}
+
+    <h2>Model Evaluation Plots</h2>
+    <div class="grid-container">
+        <div class="grid-item">
+            <img src="{{ url_for('static', filename='linear_plot.jpg') }}" alt="Plot 1">
+        </div>
+        <div class="grid-item">
+            <img src="{{ url_for('static', filename='knn_plot.jpg') }}" alt="Plot 2">
+        </div>
+        <div class="grid-item">
+            <img src="{{ url_for('static', filename='svm_plot.jpg') }}" alt="Plot 3">
+        </div>
+        <div class="grid-item">
+            <img src="{{ url_for('static', filename='mlp_plot.jpg') }}" alt="Plot 4">
+        </div>
+    </div>
+
+    <h2>Model Evaluation Comparison</h2>
+    <div>
+        {{ evaluation_table|safe }}
+    </div>
+    <h2>Model Predictions Comparison</h2>
+    <div>
+        {{ comparison_table|safe }}
+    </div>
+    <h2>Feature Importance</h2>
+    <div>
+        {{ feature_importance_table|safe }}
+    </div>
+</body>
+</html>
